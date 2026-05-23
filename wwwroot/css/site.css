@@ -20,3 +20,10 @@ html {
 body {
   margin-bottom: 60px;
 }
+.book-card:hover {
+    transform: scale(1.03);
+}
+
+    .book-card:hover .book-info {
+        opacity: 1;
+    }

@@ -1,44 +1,128 @@
-﻿@model List<Collection>
+﻿@using WriterApp.Models
+@model List<Collection>
 
 @{
     ViewData["Title"] = "Home Page";
 
-    // List<Book> list = new List<Book>();
-    // @foreach (Collection item in @Model) foreach (Book book in item.Books) if (!list.Contains(book)) list.Add(book);
-    // Book MainBook = new Book("","","");
-    // @foreach (Book book1 in @list) if (book1.Id == @ViewBag.MainId) MainBook = book1;
+    List<Book> books = ViewBag.Books;
 }
 
+<div style="padding:30px;">
 
-<div style="display:flex; flex-direction:row;">
-    <div class="text-center" style="width: 18rem; margin-inline: 2rem">
-        @foreach (Collection item in @Model)
-        {
-            <p class="list-group-item">@item.Name</p>
-            foreach (var (key, value) in item.Books)
-            {
-                <a class="btn btn-primary"
-                       style="margin: 20px; width:300px;"
-                       asp-controller="Book"
+    @foreach (Collection item in Model)
+    {
+        <div style="margin-bottom:60px;">
+
+            <h2 style="
+                    margin-bottom:30px;
+                    font-weight:700;
+                    font-size:32px;">
+                @item.Name
+            </h2>
+
+            <div style="
+                    display:flex;
+                    flex-wrap:wrap;
+                    gap:30px;">
+
+                @foreach (var (key, value) in item.Books)
+                {
+                    Book currentBook = books.First(x => x.Id == key);
+
+                    <a asp-controller="Book"
                        asp-action="Index"
-                       asp-route-id="@key">@value</a>
-            }
-        }
+                       asp-route-id="@key"
+                       style="text-decoration:none;">
 
-        <form>
-            <input required placeholder="Название" name="Name" />
-            <input required placeholder="Автор" name="Author" />
-            <input required placeholder="Жанр" name="Genre" />
-            <input required placeholder="Статус чтения" name="IsDone" />
-            <input placeholder="Краткое описание" name="Description" />
-            <input placeholder="Ссылка на изображение" name="PathImage" />
+                        <div class="book-card"
+                             style="
+                                     position:relative;
+                                     width:220px;
+                                     height:320px;
+                                     overflow:hidden;
+                                     border-radius:20px;
+                                     box-shadow:0 5px 20px rgba(0,0,0,0.25);
+                                     transition:0.3s;
+                                     cursor:pointer;">
 
-            <button type="submit" asp-controller="Home" asp-action="AddNew">Добавить новый рассказ</button>
-        </form>
-        @* <a class="btn btn-primary"
-           style="margin: 20px; width:300px;"
-           asp-controller="Home"
-           asp-action="AddNew">Добавить новый рассказ</a> *@
+                            <img src="@currentBook.PathImage"
+                                 style="
+                                         width:100%;
+                                         height:100%;
+                                         object-fit:cover;" />
 
-    </div>
+                            <div class="book-info"
+                                 style="
+                                         position:absolute;
+                                         bottom:0;
+                                         left:0;
+                                         width:100%;
+                                         padding:20px;
+                                         background:linear-gradient(
+                                             to top,
+                                             rgba(0,0,0,0.9),
+                                             rgba(0,0,0,0.0));
+                                         color:white;
+                                         opacity:0;
+                                         transition:0.3s;">
+
+                                <h4 style="
+                                            margin:0;
+                                            font-size:22px;
+                                            font-weight:700;">
+                                    @currentBook.Name
+                                </h4>
+
+                                <p style="
+                                           margin-top:5px;
+                                           font-size:16px;">
+                                    @currentBook.Author
+                                </p>
+                            </div>
+
+                        </div>
+                    </a>
+                }
+            </div>
+        </div>
+    }
+
+    <hr style="margin-top:50px; margin-bottom:40px;" />
+
+    <h2 style="margin-bottom:20px;">Добавить новую книгу</h2>
+
+    <form style="
+          display:flex;
+          flex-direction:column;
+          gap:15px;
+          width:400px;">
+
+        <input required placeholder="Название" name="Name" class="form-control" />
+
+        <input required placeholder="Автор" name="Author" class="form-control" />
+
+        <input required placeholder="Жанр" name="Genre" class="form-control" />
+
+        <input required placeholder="Статус чтения (true/false)"
+               name="IsDone"
+               class="form-control" />
+
+        <textarea placeholder="Краткое описание"
+                  name="Description"
+                  class="form-control"
+                  rows="4"></textarea>
+
+        <input placeholder="Ссылка на изображение"
+               name="PathImage"
+               class="form-control" />
+
+        <button type="submit"
+                class="btn btn-success"
+                asp-controller="Home"
+                asp-action="AddNew">
+            Добавить новую книгу
+        </button>
+
+    </form>
+
 </div>

@@ -26,6 +26,7 @@ namespace WriterApp.Controllers
 
         public IActionResult Index()
         {
+            ViewBag.Books = books;
             return View(collections);
         }
 
